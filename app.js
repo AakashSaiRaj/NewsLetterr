@@ -28,6 +28,10 @@ app.get("/", function(req, res){
     res.sendFile(__dirname+"/signup.html");
 });
 
+app.post("/failure", function(req, res){
+    res.redirect("/");
+});
+
 app.post("/", function(req, res){
     const firstName=req.body.fname;
     const lastName=req.body.lname;
