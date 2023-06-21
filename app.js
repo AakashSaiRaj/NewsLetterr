@@ -1,12 +1,28 @@
 const express=require("express");
 const app=express();
-const port=process.env.PORT;
+const port=process.env.PORT||3000;
 const bodyParser=require("body-parser");
 const https=require("https");
+const dotenv =require("dotenv");
+const { log } = require("console");
+const path=require("path");
+dotenv.config();
 
 app.use(bodyParser.urlencoded({extended:true}));
 
+
+
 app.use(express.static("public"));
+
+// app.use(express.static(path.join(__dirname, "./client/build")));
+// app.get("*", function (_, res) {
+//   res.sendFile(
+//     path.join(__dirname, "./client/build/signup.html"),
+//     function (err) {
+//       res.status(500).send(err);
+//     }
+//   );
+// });
 
 app.get("/", function(req, res){
     res.sendFile(__dirname+"/signup.html");
@@ -32,11 +48,13 @@ app.post("/", function(req, res){
     };
 
     const jsonData=JSON.stringify(data);
-    const url="https://us21.api.mailchimp.com/3.0/lists/561c655e64";
+    const url=`https://us21.api.mailchimp.com/3.0/lists/${process.env.LIST_ID}`;
     const options={
         method:"POST",
-        auth:"aakash:a4f452aa743e920c836c54d661ac82f7-us21"
+        auth:`aakash:${process.env.API_KEY}`
     }
+    console.log(`aakash:${process.env.API_KEY}`);
+    console.log(url);
     const request=https.request(url, options,function(response){
         if(response.statusCode===200){
             res.sendFile(__dirname+"/success.html");
@@ -61,6 +79,3 @@ app.listen(port, function(){
 });
 
 
-// a4f452aa743e920c836c54d661ac82f7-us21
-
-// 561c655e64
